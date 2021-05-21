@@ -15,7 +15,7 @@ const app = express();
 ////////////////////////////////
 // create a test route
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.send("welcome to Group 2");
 });
 
 ///////////////////////////////
