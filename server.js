@@ -61,7 +61,7 @@ app.get("/", (req, res) => {
 
 
 // JOBS INDEX ROUTE
-app.get("/job", async (req, res) => {
+app.get("/jobs", async (req, res) => {
   try {
     // send all posted jobs
     res.json(await Job.find({}));
@@ -72,7 +72,7 @@ app.get("/job", async (req, res) => {
 });
 
 // JOB CREATE ROUTE
-app.post("/job", async (req, res) => {
+app.post("/jobs", async (req, res) => {
   try {
     // send all job
     res.json(await Job.create(req.body));
@@ -83,7 +83,7 @@ app.post("/job", async (req, res) => {
 });
 
 // UPDATE JOB  ROUTE
-app.put("/job/:id", async (req, res) => {
+app.put("/jobs/:id", async (req, res) => {
   try {
     // send all job and find job by ID to update
     res.json(
@@ -96,7 +96,7 @@ app.put("/job/:id", async (req, res) => {
 });
 
 // DELETE JOB ROUTE
-app.delete("/job/:id", async (req, res) => {
+app.delete("/jobs/:id", async (req, res) => {
   try {
     // send all jobs and remove job by ID
     res.json(await Job.findByIdAndRemove(req.params.id));
