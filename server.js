@@ -1,48 +1,59 @@
 ///////////////////////////////
 // DEPENDENCIES
 ////////////////////////////////
-// get .env variables
+// grab environment variables
 require("dotenv").config();
-// pull PORT from .env, give default value of 3000
-// pull MONGODB_URL from .env
-const { PORT = 3000, MONGODB_URL } = process.env;
 // import express
 const express = require("express");
 // create application object
 const app = express();
 // import mongoose
-const mongoose = require("mongoose");
+const mongoose = require("./db/connection");
+const SECRET = process.env.SECRET || "secret";
+// pull MONGODB_URL from .env
+const { PORT = 3000, MONGODB_URL } = process.env;
 // import middlware
 const cors = require("cors");
 const morgan = require("morgan");
 
+//import bcrypt
+const bcrypt = require('bcrypt');
+//import session 
+const session = require('express-session');
+const methodOverride = require("method-override");
+//for Homerouter
+const HomeRouter = require("./routes/home");
+const connect = require("connect-mongodb-session")(session) // store cookies in mongo
 
-///////////////////////////////
-// DATABASE CONNECTION
-////////////////////////////////
-// Establish Connection
-mongoose.connect(MONGODB_URL, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
-// Connection Events
-mongoose.connection
-  .on("open", () => console.log("Your are connected to mongoose"))
-  .on("close", () => console.log("Your are disconnected from mongoose"))
-  .on("error", (error) => console.log(error));
 
-////////////////////////////////
-// MODELS
-////////////////////////////////
-const JobSchema = new mongoose.Schema({
-  title: {type:String, required:true},
-  description:{type: String, required:true},
-  requirements: String,
-  location: String,
-  salary: String,
-});
+// ///////////////////////////////////////////
+// //AUTH
+// ////////////////////////////////////////////
+// // inside of playground/bcrypt.js
 
-const Job = mongoose.model("Job", JobSchema);
+// const SALT_ROUNDS = bcrypt.genSaltSync(10);
+
+// const password = 'supersecretpassword';
+// /
+// const hashedString = bcrypt.hashSync(password, SALT_ROUNDS);
+
+// SESSION MIDDLEWARE REGISTRATION (adds req.session property)
+app.use(
+  session({
+    secret: SECRET,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    },
+    saveUninitialized: true, // create session regardless of changes
+    resave: true, //save regardless of changes
+    store: new connect({
+      uri: process.env.MONGODB_URL,
+      databaseName: "sessions",
+      collection: "sessions",
+    }),
+  })
+);
+
 
 ///////////////////////////////
 // MiddleWare
@@ -52,59 +63,11 @@ app.use(morgan("dev")); // logging
 app.use(express.json()); // parse json bodies
 
 ///////////////////////////////
-// ROUTES
+// ROUTER
 ////////////////////////////////
-// create a test route
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
 
-
-// JOBS INDEX ROUTE
-app.get("/jobs", async (req, res) => {
-  try {
-    // send all posted jobs
-    res.json(await Job.find({}));
-  } catch (error) {
-    //send error
-    res.status(400).json(error);
-  }
-});
-
-// JOB CREATE ROUTE
-app.post("/jobs", async (req, res) => {
-  try {
-    // send all job
-    res.json(await Job.create(req.body));
-  } catch (error) {
-    //send error
-    res.status(400).json(error);
-  }
-});
-
-// UPDATE JOB  ROUTE
-app.put("/jobs/:id", async (req, res) => {
-  try {
-    // send all job and find job by ID to update
-    res.json(
-      await Job.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    );
-  } catch (error) {
-    //send error
-    res.status(400).json(error);
-  }
-});
-
-// DELETE JOB ROUTE
-app.delete("/jobs/:id", async (req, res) => {
-  try {
-    // send all jobs and remove job by ID
-    res.json(await Job.findByIdAndRemove(req.params.id));
-  } catch (error) {
-    //send error
-    res.status(400).json(error);
-  }
-});
+//HomeRouter
+app.use("/", HomeRouter);
 
 
 ///////////////////////////////
