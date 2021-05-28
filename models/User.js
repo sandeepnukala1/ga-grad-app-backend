@@ -2,9 +2,10 @@
 // MODELS
 ////////////////////////////////
 
-const mongoose = require("mongoose");
+const {Schema, model} = require("mongoose");
 
-const JobSchema = new mongoose.Schema({
+//Job Schema
+const JobSchema = new Schema({
     title: {type:String, required:true},
     description:{type: String, required:true},
     requirements: String,
@@ -13,16 +14,15 @@ const JobSchema = new mongoose.Schema({
   }, {timestamps: true});
   
   // The User Schema
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
       username: {type: String, unique: true, required: true},
       password: {type: String, required: true},
       jobs: [JobSchema],
   }, {timestamps: true})
   
+const User = model ("User", UserSchema);
   
-const User = mongoose.model("User", UserSchema);
-  
-// Export the User Model
-module.exports = User
+// Export the Model
+module.exports = User;
   
   
