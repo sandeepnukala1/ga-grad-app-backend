@@ -5,6 +5,7 @@ const bcrypt = require ("bcrypt");
 const {Router} = require("express");
 const router = Router ();
 const {SECRET} = process.env;
+const auth = require("../auth/index");
 
 //create a USER
 router.post("/signup", async (req, res) => {
@@ -20,7 +21,7 @@ router.post("/signup", async (req, res) => {
 //USER login
 router.post("/login", async (req, res) => {
     try{
-        const {username, password} = req.body
+        const {username, password} = req.body;
         const user = await User.findOne({username});
         if (user){
             const match = await bcrypt.compare(password, user.password)
@@ -37,7 +38,8 @@ router.post("/login", async (req, res) => {
     catch (error){
         res.status(400).json({error});
     }
-})
+});
 
+//USER LOGOUT
 
-module.exports = router
+module.exports = router;
