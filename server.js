@@ -10,12 +10,25 @@ const { PORT = 3000, MONGODB_URL } = process.env;
 const express = require("express");
 // create application object
 const app = express();
+const aws = require("aws-sdk");
 // import mongoose
 const mongoose = require("mongoose");
 // import middlware
 const cors = require("cors");
 const morgan = require("morgan");
+const uuid = require("uuid")
+const S3_ACCESS_KEY = process.env.ID
+const S3_ACCESS_SECRET = process.env.SECRET
+const multer = require("multer");
+const multerS3 = require("multer-s3");
 
+aws.config.update({
+  secretAccessKey: S3_ACCESS_SECRET,
+  accessKeyId: S3_ACCESS_KEY,
+  region: process.env.AWS_REGION
+})
+
+const s3 = new aws.S3();
 
 ///////////////////////////////
 // DATABASE CONNECTION
@@ -50,6 +63,18 @@ const Job = mongoose.model("Job", JobSchema);
 app.use(cors()); // to prevent cors errors, open access to all origins
 app.use(morgan("dev")); // logging
 app.use(express.json()); // parse json bodies
+
+
+const upload = multer({
+  storage: multerS3({
+      s3: s3,
+      bucket: 'bucket-name',
+      key: function (req, file, cb) {
+          console.log(file);
+          cb(null, file.originalname); //use Date.now() for unique file keys
+      }
+  })
+});
 
 ///////////////////////////////
 // ROUTES
@@ -105,6 +130,10 @@ app.delete("/jobs/:id", async (req, res) => {
     res.status(400).json(error);
   }
 });
+
+app.post("/upload", upload.array('upl'), (req, res) => {
+   res.send("Uploaded!")
+})
 
 
 ///////////////////////////////
