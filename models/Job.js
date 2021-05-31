@@ -11,6 +11,13 @@ const jobSchema = new Schema({
     requirements: String,
     location: String,
     salary: String,
+    resume: Boolean,
+    research: Boolean,
+    linkedin: Boolean,
+    followup: Boolean,
+    application: Boolean,
+    submitted: Boolean,
+    notes: String,
     username: {type:String, required: true}
   }, {timestamps: true});
 

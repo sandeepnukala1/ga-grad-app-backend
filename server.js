@@ -18,12 +18,11 @@ const morgan = require("morgan");
 const bcrypt = require('bcrypt');
 //import session 
 const session = require('express-session');
-const methodOverride = require("method-override");
 //for Homerouter
 const HomeRouter = require("./routes/home");
-const connect = require("connect-mongodb-session")(session); // store cookies in mongo
-//Auth router
+//Auth or log in router
 const AuthRouter = require ("./controllers/user");
+//Jobs Router
 const JobRouter = require ("./controllers/job")
 const auth = require("./auth/index");
 
