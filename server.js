@@ -37,6 +37,7 @@ app.use(express.json()); // parse json bodies
 ///////////////////////////////
 // ROUTER
 ////////////////////////////////
+app.use("/", HomeRouter);
 app.get("/", auth, (req,res) => {
     res.json(req.payload);
 });
