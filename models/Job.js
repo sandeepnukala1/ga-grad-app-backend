@@ -11,7 +11,13 @@ const jobSchema = new Schema({
     requirements: String,
     location: String,
     salary: String,
-    username: {type:String, required: true}
+    username: {type:String, required: true},
+    resumeReady: {type: Boolean, default: false},
+    foundLinkedInConnection: {type: Boolean, default: false},
+    recruiterFollowUp: {type: Boolean, default: false},
+    applicationSubmitted: {type: Boolean, default: false},
+    dateSubmitted: Date
+
   }, {timestamps: true});
 
   const Job = model ("job", jobSchema);
