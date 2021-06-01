@@ -15,4 +15,4 @@
 
     - *Show page*: <br /><br /><img src="https://i.imgur.com/otxJqrX.png" width="250"> 
 
-- [Click here to check out the live app.](https://60ada6626eb0ea000828a54f--eager-montalcini-3bce15.netlify.app/)
+- [Click here to check out the live app.](https://60b6a90d418688000817d03a--eager-montalcini-3bce15.netlify.app/)
