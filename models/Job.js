@@ -12,10 +12,10 @@ const jobSchema = new Schema({
     location: String,
     salary: String,
     username: {type:String, required: true},
-    resumeReady: Boolean,
-    foundLinkedInConnection: Boolean,
-    recruiterFollowUp: Boolean,
-    applicationSubmitted: Boolean,
+    resumeReady: {type: Boolean, default: false},
+    foundLinkedInConnection: {type: Boolean, default: false},
+    recruiterFollowUp: {type: Boolean, default: false},
+    applicationSubmitted: {type: Boolean, default: false},
     dateSubmitted: Date
 
   }, {timestamps: true});
