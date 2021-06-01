@@ -20,22 +20,24 @@ router.post("/signup", async (req, res) => {
 
 //USER login
 router.post("/login", async (req, res) => {
-    
-        const {username, password} = req.body;
-        const user = await User.findOne({username});
-        if (user){
-            const match = await bcrypt.compare(password, user.password)
-            if (match){
-                const token = await jwt.sign ({username}, SECRET)
-                res.status(200).json({token})
-            } else{
-                res.status(400).json({error: "PASSWORD DOES NOT MATCH"})
-            }
-        }else{
-            res.status(400).json ({error: "USER DOES NOT EXIST"})
+    try {
+      const { username, password } = req.body;
+      const user = await User.findOne({ username });
+      if (user) {
+        const match = await bcrypt.compare(password, user.password);
+        if (match) {
+          const token = await jwt.sign({ username }, SECRET);
+          res.status(200).json({ token });
+        } else {
+          res.status(400).json({ error: "PASSWORD DOES NOT MATCH" });
         }
-    
-});
+      } else {
+        res.status(400).json({ error: "USER DOES NOT EXIST" });
+      }
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  });
 
 //USER LOGOUT
 
